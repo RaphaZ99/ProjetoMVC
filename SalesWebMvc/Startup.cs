@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using SalesWebMvc.Models;
+using SalesWebMvc.Data;
 
 namespace SalesWebMvc
 {
@@ -37,15 +38,23 @@ namespace SalesWebMvc
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.AddDbContext<SalesWebMvcContext>(options =>
-                    options.UseMySql(Configuration.GetConnectionString("SalesWebMvcContext"), builder => builder.MigrationsAssembly("SalesWebMvc")));
+           
+            options.UseMySql(Configuration.GetConnectionString("SalesWebMvcContext"), builder => builder.MigrationsAssembly("SalesWebMvc")));
+
+
+            //Registrando o Serviço no sistema de injeção de dependencias da aplicação
+            services.AddScoped<SeendigService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        //Adicionando o metodo sendigService, quando for um objeto de injeção de sistema
+        //E automatico criado uma instancia do objeto
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, SeendigService service)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                service.Seed();
             }
             else
             {
