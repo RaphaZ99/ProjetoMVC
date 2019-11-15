@@ -1,6 +1,6 @@
 ﻿@model SalesWebMvc.Models.ViewModels.SellerFormViewModel
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Edit";
 }
 
 <h2>@ViewData["Title"]</h2>
@@ -10,7 +10,8 @@
 <hr />
 <div classe="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="Edit">
+            <input type="hidden" asp-for="Seller.Id" />
             <div class="form-group">
                 <label asp-for="Seller.Name" class="control-label"></label>
                 <input asp-for="Seller.Name" class="form-control" />
@@ -31,13 +32,13 @@
                 <div class="form-group">
                     <label asp-for="Seller.DepartamentId" class="control-label"></label>
                     <!--ASP-ITENs constroi os itens da caixa de seleção de acordo com a lista que vc passa, 3 argumentos = Fonte De dados da coleção,
-                        Qual atribudo que vai ser a chavde/codigo, 
+                        Qual atribudo que vai ser a chavde/codigo,
                         Qual atributo do objeto ira aparecer-->
                     <select asp-for="Seller.DepartamentId" asp-items="@(new SelectList(Model.Departaments,"Id","Name"))" class="form-control"></select>
                 </div>
 
 
-                <input type="submit" value="Create" class="btn btn-default" />
+                <input type="submit" value="Save" class="btn btn-default" />
 
             </div>
         </form>

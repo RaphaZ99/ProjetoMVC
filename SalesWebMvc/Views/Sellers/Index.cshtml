@@ -14,8 +14,13 @@
 
 </p>
 
+    <!--objeto table html-->
 <table class="table table-striped table-hover">
+
+    <!--thread cabeçalho da tabela-->
     <thead>
+
+        <!--tr para definir a linha de cabeçalho da tabela-->
         <tr class="success">
         <th>
 
@@ -42,12 +47,13 @@
         </tr>
     </thead>
 
+    <!-- Corpo da tabela-->
     <tbody>
         @foreach(var item in Model)
         {
 
         <tr>
-
+            <!--td defini que vai ser colunas-->
             <td>
 
                 @Html.DisplayFor(modelItem => item.Name)
