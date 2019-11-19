@@ -23,32 +23,33 @@ private readonly DepartamentService _departamentService;
             _departamentService = departamentService;
 
         }
-        public IActionResult Index()
+        public  async Task <IActionResult> Index()
         {
 
-            var list = _sellerService.FindALL();
+            var list = await _sellerService.FindAllAsync();
 
             return View(list);
+
         }
 
 
         //IActionResult o tipo de retorno de todas as ações
         //Metodo para abrir a tela de cadastro de vendedores
-        public IActionResult Create()
+        public async Task <IActionResult> Create()
         {
 
-            var departaments = _departamentService.FindAll();
+            var departaments =  await _departamentService.FindAllAsync();
             var viewModel = new SellerFormViewModel { Departaments = departaments };
             return View(viewModel);
 
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public  IActionResult Create(Seller seller)
+        public  async Task <IActionResult> Create(Seller seller)
         {
 
             
-            _sellerService.Insert(seller);
+           await  _sellerService.InsertAsync(seller);
 
             return RedirectToAction(nameof(Index));
 
@@ -56,7 +57,7 @@ private readonly DepartamentService _departamentService;
         }
 
 
-        public IActionResult Delete(int? id)
+        public async Task <IActionResult> Delete(int? id)
         {
 
             if (id == null)
@@ -66,7 +67,7 @@ private readonly DepartamentService _departamentService;
 
             }
 
-            var obj = _sellerService.FindbyId(id.Value);
+            var obj = await _sellerService.FindbyIdAsync(id.Value);
 
             if(obj == null)
             {
@@ -80,17 +81,25 @@ private readonly DepartamentService _departamentService;
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
+            try
+            {
+                await _sellerService.RemoveAsync(id);
+                return RedirectToAction(nameof(Index));
 
-            _sellerService.Remove(id);
-            return RedirectToAction(nameof(Index));
+            }catch(IntegrityException e)
+            {
+
+                return RedirectToAction(nameof(Error), new { message = e.Message });
+
+            }
 
         }
 
-        public IActionResult Details(int? id)
+        public async Task <IActionResult >Details(int? id)
         {
-
+          
 
             if (id == null)
             {
@@ -99,7 +108,7 @@ private readonly DepartamentService _departamentService;
 
             }
 
-            var obj = _sellerService.FindbyId(id.Value);
+            var obj = await _sellerService.FindbyIdAsync(id.Value);
 
             if (obj == null)
             {
@@ -111,7 +120,7 @@ private readonly DepartamentService _departamentService;
 
         }
 
-        public IActionResult Edit(int? id)
+        public async Task <IActionResult> Edit(int? id)
         {
             if(id == null)
             {
@@ -121,14 +130,14 @@ private readonly DepartamentService _departamentService;
 
             }
 
-            var obj = _sellerService.FindbyId(id.Value);
+            var obj = await _sellerService.FindbyIdAsync(id.Value);
             if(obj == null)
             {
 
                 return RedirectToAction(nameof(Error), new { message = "ID Não Encontrado" });
             }
 
-            List<Departament> departaments = _departamentService.FindAll();
+            List<Departament> departaments = await _departamentService.FindAllAsync();
 
             SellerFormViewModel viewmodel = new SellerFormViewModel { Seller = obj, Departaments = departaments };
 
@@ -137,7 +146,7 @@ private readonly DepartamentService _departamentService;
         }
 
         [HttpPost]
-        public IActionResult Edit(int id, Seller seller)
+        public  async Task <IActionResult> Edit(int id, Seller seller)
         {
 
             if(id != seller.Id)
@@ -147,7 +156,7 @@ private readonly DepartamentService _departamentService;
             }
             try
             {
-                _sellerService.Update(seller);
+              await  _sellerService.UpdateAsync(seller);
                 return RedirectToAction(nameof(Index));
             } catch(DllNotFoundException e)
             {

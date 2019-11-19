@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -7,11 +8,23 @@ namespace SalesWebMvc.Models
 {
     public class Seller
     {
-
+        [Display(Name = "ID do Usuario")]
         public int Id { get; set; }
-        public String  Name { get; set; }
-        public String  Email { get; set; }
+
+        [Required(ErrorMessage = "{0} requirido")]
+        [StringLength(60, MinimumLength = 3, ErrorMessage = "O tamanho do nome deve ser entre {2} e {1}")]
+        public String Name { get; set; }
+
+        [DataType(DataType.EmailAddress)]
+        [Required(ErrorMessage = "{0} requirido")]
+        public String Email { get; set; }
+        [Display(Name = "Birth Date")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString ="{0:dd/MM/yyy}")]  
         public DateTime BirthDate  { get; set; }
+        [Display (Name = "Salario Base")]
+        [DisplayFormat(DataFormatString = "{0:F2}")]
+        [Required(ErrorMessage = "{0} requirido")]
         public double  BaseSalary { get; set; }
         public Departament Departament { get; set; }
         public int DepartamentId { get; set; }
